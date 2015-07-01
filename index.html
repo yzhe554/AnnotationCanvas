@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Draw!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+
+    <link rel="stylesheet" type="text/css" href="css/annotationcanvas.css">
+    <style>
+        #canvasDiv {
+
+            border: 2px solid #8AC007;
+            margin: 0;
+            padding: 0;
+            width: 1000px;
+            height: 500px;
+
+        }
+    </style>
+
+    <script src="annotationdraw.js"></script>
+</head>
+
+
+<body>
+<div id="canvasDiv" style=" z-index: 1;">
+    <img src="img/background.png" style=" margin: 0; padding: 0; width: 1000px;height: 500px; z-index: 2; position: absolute"/>
+</div>
+<script type="text/javascript"> $(document).ready(function () {
+    prepareCanvas();
+});</script>
+
+<ul>
+    <li>
+        <input type="button" value="Clear" id="clearCanvas"/>
+        <input type="button" value="Text" id="textEditor">
+    </li>
+    <li>
+        <input type="button" value="Blue" id="bluePen"/>
+        <input type="button" value="Purple" id="purplePen"/>
+        <input type="button" value="Red" id="redPen"/>
+    </li>
+    <li>
+        <button id="chooseSmallSimpleTools" type="button">Small</button>
+        <button id="chooseNormalSimpleSizes" type="button">Normal</button>
+        <button id="chooseLargeSimpleTools" type="button">Large</button>
+        <button id="chooseHugeSimpleTools" type="button">Huge</button>
+    </li>
+    <li>
+        <input type="button" value="Eraser" id="chooseEraser"/>
+        <input type="button" value="Pen" id="choosePen"/>
+    </li>
+</ul>
+
+
+</body>
+</html>

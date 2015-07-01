@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+</head>
+<body>
+<style>
+    .info {position: absolute;}
+    canvas {background-color: green}
+</style>
+<canvas id="c" width="200" height="200"></canvas>
+
+
+<script>
+
+    var canvas = document.getElementById("c"),
+            textarea = null;
+
+
+    canvas.addEventListener('click', function(e) {
+        if (!textarea) {
+            textarea = document.createElement('textarea');
+            textarea.className = 'info';
+
+            document.body.appendChild(textarea);
+        }
+        var x = e.clientX - canvas.offsetLeft,
+                y = e.clientY - canvas.offsetTop;
+        textarea.value = "x: " + x + " y: " + y;
+        textarea.style.top = e.clientY + 'px';
+        textarea.style.left = e.clientX + 'px';
+    }, false);
+</script>
+</body>
+</html>
