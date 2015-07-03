@@ -127,6 +127,7 @@ function prepareCanvas() {
             textarea.style.top = e.clientY + 'px';
             textarea.style.left = e.clientX + 'px';
         }
+
     }, false);
 
     $('.textSize').click(function () {
@@ -491,10 +492,20 @@ $(document).ready(function () {
 
     //Change Tool
     $("#chooseEraser").click(function () {
+        if(curTool == "textEditor") {
+            $(".info").remove();
+            textarea = "";
+        }
         curTool = "eraser";
+
     });
     $("#choosePen").click(function () {
+        if(curTool == "textEditor") {
+            $(".info").remove();
+            textarea = "";
+        }
         curTool = "crayon";
+
     });
     $("#textEditor").click(function () {
         curTool = "textEditor";
