@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div  class="row img-holder" onclick="new fileReader().Init('jpg|png|svg', 'dataURL', pickImage, true)"></div>
+<script>
+    function pickImage(e) {
+        var div = document.createElement('div');
+        var str = '<div class="col-sm-6 col-md-4">';
+        str += '  <div class="thumbnail">';
+        str += '    <img src="' + e.data + '" alt="...">';
+        str += '    <div class="caption">';
+        str += '      <h4>' + e.name + '</h4>';
+        str += '      <p>size: ' + (e.size/1000).toString() + ' kilobyte</p>';
+        str += '    </div>';
+        str += '  </div>';
+        str += '</div>';
+        div.innerHTML = str;
+        document.querySelector('.img-holder').appendChild(div.children[0]);
+    }
+</script>
+</body>
+</html>

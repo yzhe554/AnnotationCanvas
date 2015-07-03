@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 </head>
 <body>
 <style>
@@ -11,13 +11,14 @@
     canvas {background-color: green}
 </style>
 <canvas id="c" width="200" height="200"></canvas>
+<input type="button" value="save" id="save">
 
 
 <script>
 
     var canvas = document.getElementById("c"),
             textarea = null;
-
+    var context = canvas.getContext("2d");
 
     canvas.addEventListener('click', function(e) {
         if (!textarea) {
@@ -32,6 +33,23 @@
         textarea.style.top = e.clientY + 'px';
         textarea.style.left = e.clientX + 'px';
     }, false);
+    
+    $('#save').click(function () {
+        context.fillStyle = '#f00';
+        context.font = 'italic bold 10px sans-serif';
+        context.textBaseline = 'bottom';
+        var ele = document.getElementsByClassName("info");
+        context.fillText(ele[0].value, parseInt(ele[i].style.left,10)-parseInt($('body').css('margin'),10), parseInt(ele[i].style.top,10)-parseInt($('body').css('margin'),10));
+        $(".info").remove();
+        context.fillStyle = '#f00';
+        context.font = 'italic bold 10px sans-serif';
+        context.textBaseline = 'bottom';
+        context.fillText('HTML5 is cool!', 20, 20);
+
+    });
 </script>
 </body>
 </html>
+
+<!--context.fillStyle = '#f00';-->
+<!--context.font = 'italic bold 30px sans-serif';-->

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+
+<div><canvas id="c6" width="600" height = "200" style="border:solid 1px #000000;"></canvas>
+    <div>
+        <button onclick="showFillText();return true;">Fill Text</button>
+        <button onclick="showStrokeText();return true;">Stroke Text</button>
+        <button onclick="Clear_text();return true;">Erase Everything</button>
+    </div>
+</div>
+
+<script>
+    var c6 = document.getElementById("c6");
+    var c6_context = c6.getContext("2d");
+
+    function showFillText() {
+        c6_context.fillStyle = '#f00';
+        c6_context.font = 'italic bold 30px sans-serif';
+        c6_context.textBaseline = 'bottom';
+        c6_context.fillText('HTML5 is cool!', 50, 100);
+    }
+
+    function showStrokeText() {
+        c6_context.strokeStyle = "#003300";
+        c6_context.font = '40px san-serif';
+        c6_context.textBaseline = 'bottom';
+        c6_context.strokeText('HTML5 is cool?', 300, 100);
+    }
+
+    function Clear_text() {
+        c6_context.clearRect(1, 1, 600, 300);
+    }
+</script>
+
+</body>
+</html>

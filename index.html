@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <title>Draw!</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/component.css" />
+    <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
     <link rel="stylesheet" type="text/css" href="css/annotationcanvas.css">
     <style>
@@ -35,6 +39,9 @@
     <li>
         <input type="button" value="Clear" id="clearCanvas"/>
         <input type="button" value="Text" id="textEditor">
+        <input type="button" value="Save Text" id="saveText">
+        <input type="file" value="Upload an Image" id="imgUpload" accept="image/*">
+        <input type="button" value="Save Image" id="saveImg" disabled>
     </li>
     <li>
         <input type="button" value="Blue" id="bluePen"/>
@@ -46,6 +53,9 @@
         <button id="chooseNormalSimpleSizes" type="button">Normal</button>
         <button id="chooseLargeSimpleTools" type="button">Large</button>
         <button id="chooseHugeSimpleTools" type="button">Huge</button>
+        <input type="button" value="10" class="textSize">
+        <input type="button" value="20" class="textSize">
+        <input type="button" value="30" class="textSize">
     </li>
     <li>
         <input type="button" value="Eraser" id="chooseEraser"/>
