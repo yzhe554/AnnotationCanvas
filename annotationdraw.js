@@ -47,6 +47,15 @@ var imgArray = new Array();
 var imgXArray = new Array();
 var imgYArray = new Array();
 
+var img = {};
+/////////////// json
+
+var jsonArray = new Array();
+var textObj = {};
+var imgObj = {};
+
+//////////////
+
 
 function prepareCanvas() {
     var canvasDiv = document.getElementById('canvasDiv');
@@ -103,7 +112,6 @@ function prepareCanvas() {
     canvasDiv.appendChild(tmp_canvas);
 
 
-
     $('#canvas').mousedown(function (e) {
         var mouseX = e.pageX - this.offsetLeft;
         var mouseY = e.pageY - this.offsetTop;
@@ -147,18 +155,32 @@ function prepareCanvas() {
 
     $('#saveText').click(function () {
         console.log("clicked saveText!")
-        if(textarea) {
+        if (textarea) {
             textColor = curColor;
 
             textFont = "italic";
             textareaColor.push(textColor);
             //textareaSize.push(textSize);
-            console.log(textFont+textSize);
-            textareaFont.push(textFont +" " + textSize + " sans-serif");
-            textareaXArray.push(parseInt(textarea.style.left,10) - parseInt($('body').css('margin'),10));
-            textareaYArray.push(parseInt(textarea.style.top,10) + parseInt($('body').css('margin'),10));
+            console.log(textFont + textSize);
+            textareaFont.push(textFont + " " + textSize + " sans-serif");
+            textareaXArray.push(parseInt(textarea.style.left, 10) - parseInt($('body').css('margin'), 10));
+            textareaYArray.push(parseInt(textarea.style.top, 10) + parseInt($('body').css('margin'), 10));
             textareaValue.push(textarea.value);
             $('.info').remove();
+
+
+            ////////Json Text
+            textObj = {};
+            textObj.textValue = textarea.value;
+            textObj.font = textFont + " " + textSize + " sans-serif";
+            textObj.color = textColor;
+            textObj.x = parseInt(textarea.style.left, 10) - parseInt($('body').css('margin'), 10);
+            textObj.y = parseInt(textarea.style.top, 10) + parseInt($('body').css('margin'), 10);
+            jsonArray.push(textObj);
+
+
+            //////////////
+
 
             textarea = null;
             redraw();
@@ -190,9 +212,10 @@ function prepareCanvas() {
         curTool = "img";
         for (var i = 0; i < e.originalEvent.srcElement.files.length; i++) {
 
-            var file = e.originalEvent.srcElement.files[i];
+            var file = e.originalEvent.srcElement.files[i]
 
-            var img = document.createElement("img");
+            img = {};
+            img = document.createElement("img");
             var reader = new FileReader();
             img.setAttribute('class', "resize-image");
             img.setAttribute('alt', "image for resizing");
@@ -203,6 +226,11 @@ function prepareCanvas() {
 
                 img.src = reader.result;
                 imgArray.push(img);
+                console.log("hahahahaha: " + img.src);
+                ///////img json1
+                imgObj.img = img;
+
+                /////////
             }
             reader.readAsDataURL(file);
             document.body.appendChild(img);
@@ -216,9 +244,9 @@ function prepareCanvas() {
     $('#saveImg').click(function () {
 
         var img = document.getElementsByClassName('resize-image');
-        var imgX = parseInt($(".resize-container")[0].style.left,10) - parseInt($(".resize-image")[0].style.left,10),
-            imgY = parseInt($(".resize-container")[0].style.top,10) - parseInt($(".resize-image")[0].style.top,10);
-        context.drawImage(img[0],imgX,imgY);
+        var imgX = parseInt($(".resize-container")[0].style.left, 10) - parseInt($(".resize-image")[0].style.left, 10),
+            imgY = parseInt($(".resize-container")[0].style.top, 10) - parseInt($(".resize-image")[0].style.top, 10);
+        context.drawImage(img[0], imgX, imgY);
         removeImgElement();
 
         imgXArray.push(imgX);
@@ -228,7 +256,12 @@ function prepareCanvas() {
         $('#imgUpload').prop('disabled', false);
         $('#saveImg').prop('disabled', true);
         var control = $("#imgUpload");
-        control.replaceWith( control = control.clone( true ) );
+        control.replaceWith(control = control.clone(true));
+
+        //////////// img json2
+
+
+        ///////////
 
     });
 
@@ -240,7 +273,7 @@ function prepareCanvas() {
         }
         myNode.remove();
     }
-    
+
     var resizeableImage = function (image_target) {
         // Some variable and settings
         var $container,
@@ -469,19 +502,19 @@ $(document).ready(function () {
     //Change Pen Color
     $("#bluePen").click(function () {
         curColor = "#0000CC";
-        if(curTool == "eraser") {
+        if (curTool == "eraser") {
             curTool = "crayon";
         }
     });
     $("#purplePen").click(function () {
         curColor = "#cb3594";
-        if(curTool == "eraser") {
+        if (curTool == "eraser") {
             curTool = "crayon";
         }
     });
     $("#redPen").click(function () {
         curColor = "#df4b26";
-        if(curTool == "eraser") {
+        if (curTool == "eraser") {
             curTool = "crayon";
         }
     });
@@ -502,7 +535,7 @@ $(document).ready(function () {
 
     //Change Tool
     $("#chooseEraser").click(function () {
-        if(curTool == "textEditor") {
+        if (curTool == "textEditor") {
             $(".info").remove();
             textarea = "";
         }
@@ -510,7 +543,7 @@ $(document).ready(function () {
 
     });
     $("#choosePen").click(function () {
-        if(curTool == "textEditor") {
+        if (curTool == "textEditor") {
             $(".info").remove();
             textarea = "";
         }
@@ -638,13 +671,13 @@ function redraw() {
         context.lineTo(clickX[i], clickY[i]);
         context.closePath();
 
-        if(clickTool[i] == "eraser"){
+        if (clickTool[i] == "eraser") {
             context.globalCompositeOperation = "destination-out";
             ctx.fillStyle = 'rgba(0,0,0,1)';
             ctx.strokeStyle = 'rgba(0,0,0,1)';
 
             context.fill();
-        }else{
+        } else {
             context.globalCompositeOperation = "source-over";	// To erase instead of draw over with white
             context.strokeStyle = clickColor[i];
         }
@@ -654,10 +687,10 @@ function redraw() {
 
 
     }
-    for(i=0;i<imgArray.length;i++) {
-        context.drawImage(imgArray[i],imgXArray[i],imgYArray[i]);
+    for (i = 0; i < imgArray.length; i++) {
+        context.drawImage(imgArray[i], imgXArray[i], imgYArray[i]);
     }
-    for(i=0; i<textareaXArray.length;i++) {
+    for (i = 0; i < textareaXArray.length; i++) {
         //context.fillStyle = '#f00';
         //context.font = 'italic bold 30px sans-serif';
         //context.textBaseline = 'bottom';
