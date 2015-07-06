@@ -70,8 +70,8 @@ function prepareCanvas() {
     ////////
 
     var elem = document.getElementById('canvasDiv');
-    var child = elem.childNodes[n];
-    var canvaszindex = parseInt(child.style.zIndex) + 1;
+    //var child = elem.childNodes[n];
+    var canvaszindex = parseInt(elem.style.zIndex) + 1;
     console.log('canvaszindex' + canvaszindex);
 
     //    ++canvaszindex;
@@ -93,6 +93,16 @@ function prepareCanvas() {
         canvas = G_vmlCanvasManager.initElement(canvas);
     }
     context = canvas.getContext("2d");
+
+    // Creating a tmp canvas
+    var tmp_canvas = document.createElement('canvas');
+    var tmp_ctx = tmp_canvas.getContext('2d');
+    tmp_canvas.id = 'tmp_canvas';
+    tmp_canvas.width = canvas.width;
+    tmp_canvas.height = canvas.height;
+    canvasDiv.appendChild(tmp_canvas);
+
+
 
     $('#canvas').mousedown(function (e) {
         var mouseX = e.pageX - this.offsetLeft;
@@ -627,14 +637,22 @@ function redraw() {
         }
         context.lineTo(clickX[i], clickY[i]);
         context.closePath();
-        context.strokeStyle = clickColor[i];
+
+        if(clickTool[i] == "eraser"){
+            context.globalCompositeOperation = "destination-out";
+            ctx.fillStyle = 'rgba(0,0,0,1)';
+            ctx.strokeStyle = 'rgba(0,0,0,1)';
+
+            context.fill();
+        }else{
+            context.globalCompositeOperation = "source-over";	// To erase instead of draw over with white
+            context.strokeStyle = clickColor[i];
+        }
+        //context.strokeStyle = clickColor[i];
         context.lineWidth = radius;
         context.stroke();
-        if (curTool == "crayon") {
-            context.globalAlpha = 0.4;
-            context.drawImage(crayonTextureImage, 0, 0, canvasWidth, canvasHeight);
-        }
-        context.globalAlpha = 1;
+
+
     }
     for(i=0;i<imgArray.length;i++) {
         context.drawImage(imgArray[i],imgXArray[i],imgYArray[i]);
@@ -649,6 +667,7 @@ function redraw() {
         console.log("context.font: " + context.font);
         context.fillText(textareaValue[i], textareaXArray[i], textareaYArray[i]);
     }
+    context.globalAlpha = 1;
     context.restore();
 }
 
