@@ -12,9 +12,12 @@
 
     <link rel="stylesheet" type="text/css" href="css/annotationcanvas.css">
     <style>
+        body {
+            margin: 0;
+        }
         #canvasDiv {
 
-            border: 2px solid #8AC007;
+            border: 0px solid #8AC007;
             margin: 0;
             padding: 0;
             width: 1000px;
@@ -64,6 +67,8 @@
     <li>
         <input type="button" value="Eraser" id="chooseEraser"/>
         <input type="button" value="Pen" id="choosePen"/>
+        <input type="button" value="Select" id="selectTool">
+        <input type="button" value="Edit" id="editSelected" disabled>
     </li>
 </ul>
 
