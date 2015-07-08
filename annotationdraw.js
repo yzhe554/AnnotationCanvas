@@ -66,13 +66,15 @@ var localArray = [{
     "originalHeight": 125
 }, {
     "type": "app.text",
-    "textValue": "x: 360 y: 155",
+    "textValue": "x: 250 y: 320",
     "font": "italic 20px sans-serif",
     "color": "#df4b26",
-    "x": 352,
-    "y": 163,
+    "x": 250,
+    "y": 320,
     "canvasWidth": 1000,
-    "canvasHeight": 500
+    "canvasHeight": 500,
+    "width": 114.521484375,
+    "height": 20
 }];
 
 //Editing
@@ -93,17 +95,17 @@ function prepareCanvas() {
 
     canvas = document.createElement('canvas');
 
-    console.log(document.getElementById('canvasDiv').style.zIndex);
+    //console.log(document.getElementById('canvasDiv').style.zIndex);
     canvasWidth = $('#canvasDiv').width();
-    console.log(canvasWidth);
+    //console.log(canvasWidth);
     canvasHeight = $('#canvasDiv').height();
-    console.log(canvasHeight);
+    //console.log(canvasHeight);
 
     ////////
     //drawingAreaX = canvasDiv.offsetLeft;
     //drawingAreaY = canvasDiv.offsetTop;
-    console.log('x: ' + drawingAreaX);
-    console.log('y: ' + drawingAreaY);
+    //console.log('x: ' + drawingAreaX);
+    //console.log('y: ' + drawingAreaY);
     drawingAreaWidth = canvasWidth;
     drawingAreaHeight = canvasHeight;
     ////////
@@ -111,7 +113,7 @@ function prepareCanvas() {
     var elem = document.getElementById('canvasDiv');
     //var child = elem.childNodes[n];
     var canvaszindex = parseInt(elem.style.zIndex) + 1;
-    console.log('canvaszindex' + canvaszindex);
+    //console.log('canvaszindex' + canvaszindex);
 
     //    ++canvaszindex;
     //console.log(canvaszindex);
@@ -122,7 +124,7 @@ function prepareCanvas() {
     canvas.setAttribute('height', canvasHeight);
     //canvas.setAttribute('width', window.innerWidth);
     //canvas.setAttribute('height', window.innerHeight);
-    console.log(window.innerWidth);
+    //console.log(window.innerWidth);
 
     canvas.setAttribute('style', 'margin: 0; padding: 0; position: absolute;')
     canvas.setAttribute('id', 'canvas');
@@ -163,32 +165,38 @@ function prepareCanvas() {
     canvas.addEventListener('click', function (e) {
         if (curTool == 'textEditor') {
             if (!textarea) {
-                console.log('closer!!!');
+                //console.log('closer!!!');
                 textarea = document.createElement('textarea');
                 textarea.className = 'info';
                 textarea.style.zIndex = 100;
-                textarea.style.width = "100 px";
+                textarea.style.width = "100px";
                 textarea.style.height = "100px";
                 textarea.style.position = "absolute";
                 textarea.style.backgroundColor = "transparent";
+                textarea.value = "x: " + e.clientX + " y: " + e.clientY;
+
+                textarea.style.top = e.clientY + 'px';
+                textarea.style.left = e.clientX + 'px';
                 document.body.appendChild(textarea);
             }
             //var x = e.clientX - canvas.offsetLeft,
             //    y = e.clientY - canvas.offsetTop;
             //textarea.value = "x: " + x + " y: " + y;
-            textarea.value = "x: " + e.clientX + " y: " + e.clientY;
             //var mouseX = e.pageX - this.offsetLeft;
             //var mouseY = e.pageY - this.offsetTop;
-            textarea.style.top = e.clientX + 'px';
-            textarea.style.left = e.clientY + 'px';
+            textarea.value = "x: " + e.clientX + " y: " + e.clientY;
+
+            textarea.style.top = e.clientY + 'px';
+            textarea.style.left = e.clientX + 'px';
+
         }
         if (curTool == "selectTool") {
 
             console.log("clickTime: " + clickTime++);
             console.log("x: " + e.clientX + "   y: " + e.clientY);
-            console.log("local x: " + localArray[0].x + "    y: " + localArray[0].y);
-            console.log("ori x: " + localArray[0].originalWidth + "    ori y: " + localArray[0].originalHeight);
-            console.log("x+x: " + (localArray[0].x + localArray[0].originalWidth) + "    y+y: " + (localArray[0].y + localArray[0].originalHeight));
+            console.log("local x: " + localArray[1].x + "    y: " + localArray[1].y);
+            console.log("ori x: " + localArray[1].width + "    ori y: " + localArray[1].height);
+            console.log("x+x: " + (localArray[1].x + localArray[1].width) + "    y+y: " + (localArray[1].y + localArray[1].height));
             index = findElement(e.clientX, e.clientY);
             console.log(index);
             if (index >= 0) {
@@ -216,13 +224,28 @@ function prepareCanvas() {
             textFont = "italic";
             textareaColor.push(textColor);
             //textareaSize.push(textSize);
-            console.log(textFont + textSize);
+            //console.log(textFont + textSize);
             textareaFont.push(textFont + " " + textSize + " sans-serif");
-            textareaXArray.push(parseInt(textarea.style.left, 10) - parseInt($('body').css('margin'), 10));
-            textareaYArray.push(parseInt(textarea.style.top, 10) + parseInt($('body').css('margin'), 10));
+            textareaXArray.push(parseInt(textarea.style.left, 10));
+            textareaYArray.push(parseInt(textarea.style.top, 10));
+            //textareaXArray.push(parseInt(textarea.style.left, 10) - parseInt($('body').css('margin'), 10));
+            //textareaYArray.push(parseInt(textarea.style.top, 10) + parseInt($('body').css('margin'), 10));
             textareaValue.push(textarea.value);
             $('.info').remove();
 
+
+            ////fill text
+            var text = textarea.value;
+            context.fillStyle = textColor;
+            context.font = textFont + " " + textSize + " sans-serif";
+            //console.log("textareafont: " + textareaFont[i]);
+            //console.log("context.font: " + context.font);
+            context.textBaseline = "top";
+            context.fillText(text, parseInt(textarea.style.left, 10), parseInt(textarea.style.top, 10));
+            var metrics = context.measureText(text);
+            console.log("text width: " + metrics.width);
+            console.log("text height: " + parseInt(textSize, 10));
+            ///////
 
             ////////Json Text
             textObj = {};
@@ -230,10 +253,12 @@ function prepareCanvas() {
             textObj.textValue = textarea.value;
             textObj.font = textFont + " " + textSize + " sans-serif";
             textObj.color = textColor;
-            textObj.x = parseInt(textarea.style.left, 10) - parseInt($('body').css('margin'), 10);
-            textObj.y = parseInt(textarea.style.top, 10) + parseInt($('body').css('margin'), 10);
+            textObj.x = parseInt(textarea.style.left, 10);
+            textObj.y = parseInt(textarea.style.top, 10);
             textObj.canvasWidth = canvasWidth;
             textObj.canvasHeight = canvasHeight;
+            textObj.width = metrics.width;
+            textObj.height = parseInt(textSize, 10);
             jsonArray.push(textObj);
 
 
@@ -549,7 +574,7 @@ var resizeableImage = function (image_target) {
         }
     };
 
-    crop = function () {
+    var crop = function () {
         //Find the part of the image that is inside the crop box
         var crop_canvas,
             left = $('.overlay').offset().left - $container.offset().left,
@@ -682,7 +707,7 @@ $(document).ready(function () {
                 $('#saveImg').prop('disabled', false);
                 resizeableImage($('.resize-image'));
                 $(".resize-container").css({left: x + "px", top: y + "px"});
-                console.log("resize-container x: " + $(".resize-container")[0].style.left + "   y: " + $(".resize-container")[0].style.top);
+                //console.log("resize-container x: " + select[0].style.left + "   y: " + select[0].style.top);
             })
 
             ///
@@ -731,7 +756,7 @@ function initDraw(jsonA) {
     // Keep the drawing in the drawing area
     context.save();
     context.beginPath();
-    console.log("hereX: " + drawingAreaX);
+    //console.log("hereX: " + drawingAreaX);
     context.rect(drawingAreaX, drawingAreaY, drawingAreaX + drawingAreaWidth, drawingAreaHeight);
     context.clip();
 
@@ -763,79 +788,80 @@ function initDraw(jsonA) {
 
 
 function redraw() {
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-
-    //context.strokeStyle = "#df4b26";
-    context.lineJoin = "round";
-    //context.lineWidth = 5;
-
-    // Keep the drawing in the drawing area
-    context.save();
-    context.beginPath();
-    console.log("hereX: " + drawingAreaX);
-    context.rect(drawingAreaX, drawingAreaY, drawingAreaX + drawingAreaWidth, drawingAreaHeight);
-    context.clip();
-
-    var radius;
-    var i = 0;
-    for (; i < clickX.length; i++) {
-
-        if (clickSize[i] == "small") {
-            radius = 2;
-        } else if (clickSize[i] == "normal") {
-            radius = 5;
-        } else if (clickSize[i] == "large") {
-            radius = 10;
-        } else if (clickSize[i] == "huge") {
-            radius = 20;
-        } else {
-            alert("Error: Radius is zero for click " + i);
-            radius = 0;
-        }
-
-
-        context.beginPath();
-        if (clickDrag[i] && i) {
-            context.moveTo(clickX[i - 1], clickY[i - 1]);
-        } else {
-            context.moveTo(clickX[i] - 1, clickY[i]);
-        }
-        context.lineTo(clickX[i], clickY[i]);
-        context.closePath();
-
-        if (clickTool[i] == "eraser") {
-            context.globalCompositeOperation = "destination-out";
-            ctx.fillStyle = 'rgba(0,0,0,1)';
-            ctx.strokeStyle = 'rgba(0,0,0,1)';
-
-            context.fill();
-        } else {
-            context.globalCompositeOperation = "source-over";	// To erase instead of draw over with white
-            context.strokeStyle = clickColor[i];
-        }
-        //context.strokeStyle = clickColor[i];
-        context.lineWidth = radius;
-        context.stroke();
-
-
-    }
-    for (i = 0; i < imgArray.length; i++) {
-        context.drawImage(imgArray[i], imgXArray[i], imgYArray[i]);
-    }
-    for (i = 0; i < textareaXArray.length; i++) {
-        //context.fillStyle = '#f00';
-        //context.font = 'italic bold 30px sans-serif';
-        //context.textBaseline = 'bottom';
-        context.fillStyle = textareaColor[i];
-        context.font = textareaFont[i];
-        console.log("textareafont: " + textareaFont[i]);
-        console.log("context.font: " + context.font);
-        context.fillText(textareaValue[i], textareaXArray[i], textareaYArray[i]);
-    }
-    context.globalAlpha = 1;
-    context.restore();
-    console.log("Json Array: " + jsonArray);
-    console.log("Json Array to string: " + JSON.stringify(jsonArray));
+    //context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+    //
+    ////context.strokeStyle = "#df4b26";
+    //context.lineJoin = "round";
+    ////context.lineWidth = 5;
+    //
+    //// Keep the drawing in the drawing area
+    //context.save();
+    //context.beginPath();
+    //console.log("hereX: " + drawingAreaX);
+    //context.rect(drawingAreaX, drawingAreaY, drawingAreaX + drawingAreaWidth, drawingAreaHeight);
+    //context.clip();
+    //
+    //var radius;
+    //var i = 0;
+    //for (; i < clickX.length; i++) {
+    //
+    //    if (clickSize[i] == "small") {
+    //        radius = 2;
+    //    } else if (clickSize[i] == "normal") {
+    //        radius = 5;
+    //    } else if (clickSize[i] == "large") {
+    //        radius = 10;
+    //    } else if (clickSize[i] == "huge") {
+    //        radius = 20;
+    //    } else {
+    //        alert("Error: Radius is zero for click " + i);
+    //        radius = 0;
+    //    }
+    //
+    //
+    //    context.beginPath();
+    //    if (clickDrag[i] && i) {
+    //        context.moveTo(clickX[i - 1], clickY[i - 1]);
+    //    } else {
+    //        context.moveTo(clickX[i] - 1, clickY[i]);
+    //    }
+    //    context.lineTo(clickX[i], clickY[i]);
+    //    context.closePath();
+    //
+    //    if (clickTool[i] == "eraser") {
+    //        context.globalCompositeOperation = "destination-out";
+    //        ctx.fillStyle = 'rgba(0,0,0,1)';
+    //        ctx.strokeStyle = 'rgba(0,0,0,1)';
+    //
+    //        context.fill();
+    //    } else {
+    //        context.globalCompositeOperation = "source-over";	// To erase instead of draw over with white
+    //        context.strokeStyle = clickColor[i];
+    //    }
+    //    //context.strokeStyle = clickColor[i];
+    //    context.lineWidth = radius;
+    //    context.stroke();
+    //
+    //
+    //}
+    //for (i = 0; i < imgArray.length; i++) {
+    //    context.drawImage(imgArray[i], imgXArray[i], imgYArray[i]);
+    //}
+    //for (i = 0; i < textareaXArray.length; i++) {
+    //    //context.fillStyle = '#f00';
+    //    //context.font = 'italic bold 30px sans-serif';
+    //    //context.textBaseline = 'bottom';
+    //    context.fillStyle = textareaColor[i];
+    //    context.font = textareaFont[i];
+    //    console.log("textareafont: " + textareaFont[i]);
+    //    console.log("context.font: " + context.font);
+    //    context.textBaseline = "top";
+    //    context.fillText(textareaValue[i], textareaXArray[i], textareaYArray[i]);
+    //}
+    //context.globalAlpha = 1;
+    //context.restore();
+    //console.log("Json Array: " + jsonArray);
+    //console.log("Json Array to string: " + JSON.stringify(jsonArray));
 }
 
 //canvas.addEventListener('click', function (e) {
@@ -869,17 +895,25 @@ function findElement(x, y) {
     var i = 0;
     for (i = localArray.length - 1; i >= 0; i--) {
         var jObject = localArray[i];
-        var needToFix = 0;
-        if (testInit == true) {
-            needToFix = 0; // This should be the initial position of img
-        }
+        //var needToFix = 0;
+        //if (testInit == true) {
+        //    needToFix = 0; // This should be the initial position of img
+        //}
 
         if (jObject.type == "app.img") {
-            x -= needToFix;
-            y -= needToFix;
+            //x -= needToFix;
+            //y -= needToFix;
             if (x >= jObject.x && x <= jObject.x + jObject.originalWidth && y >= jObject.y && y <= jObject.y + jObject.originalHeight) {
                 return i;
             }
+        }
+        if (jObject.type == "app.text") {
+            console.log("in if app.text")
+            if (x >= jObject.x && x <= jObject.x + jObject.width && y >= jObject.y - jObject.height && y <= jObject.y) {
+                console.log("find text element!!")
+                return i;
+            }
+
         }
 
 
