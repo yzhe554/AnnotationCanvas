@@ -75,12 +75,136 @@ var localArray = [{
     "canvasHeight": 500,
     "width": 114.521484375,
     "height": 20
-}];
+}, {
+    "type": "app.draw",
+    "start": {"x": 72, "y": 56},
+    "end": {"x": 71, "y": 56},
+    "color": "#000000",
+    "size": 2,
+    "compositeOperation": "source-over",
+    "page": 1,
+    "ccwidth": 8159,
+    "ccheight": 10559,
+    "clientId": "1KD7aQjtSA.7NmJAFLMgu",
+    "mouseEvent": "mouseDown"
+},
+    {
+        "type": "app.draw",
+        "start": {"x": 71, "y": 56},
+        "end": {"x": 72, "y": 57},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu"
+    },
+    {
+        "type": "app.draw",
+        "start": {"x": 72, "y": 57},
+        "end": {"x": 74, "y": 61},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu"
+    },
+    {
+        "type": "app.draw",
+        "start": {"x": 74, "y": 61},
+        "end": {"x": 76, "y": 64},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu"
+    },
+    {
+        "type": "app.draw",
+        "start": {"x": 76, "y": 64},
+        "end": {"x": 77, "y": 66},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu"
+    },
+    {
+        "type": "app.draw",
+        "start": {"x": 77, "y": 66},
+        "end": {"x": 79, "y": 68},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu"
+    },
+    {
+        "type": "app.draw",
+        "start": {"x": 79, "y": 68},
+        "end": {"x": 81, "y": 70},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu"
+    }, {
+        "type": "app.draw",
+        "start": {"x": 81, "y": 70},
+        "end": {"x": 83, "y": 72},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu"
+    }, {
+        "type": "app.draw",
+        "start": {"x": 83, "y": 72},
+        "end": {"x": 84, "y": 74},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu"
+    }, {
+        "type": "app.draw",
+        "start": {"x": 84, "y": 74},
+        "end": {"x": 86, "y": 75},
+        "color": "#000000",
+        "size": 2,
+        "compositeOperation": "source-over",
+        "page": 1,
+        "ccwidth": 8159,
+        "ccheight": 10559,
+        "clientId": "1KD7aQjtSA.7NmJAFLMgu",
+        "mouseEvent": "mouseUp"
+    }];
 
 //Editing
 var index = 0;
 var edit = false;
 var tempObj = {};
+
+// For selecting lane
+var mouseDownIdx = -1;
+var mouseUpIdx = -1;
+var lastMouseUpIdx = -1;
+
 
 /////// For testing
 var testInit = true;
@@ -90,6 +214,16 @@ var clickTime = 0;
 
 
 function prepareCanvas() {
+    // Check for the various File API support.
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+        // Great success! All the File APIs are supported.
+    } else {
+        alert('The File APIs are not fully supported in this browser.');
+    }
+
+
+
+
     var canvasDiv = document.getElementById('canvasDiv');
 
 
@@ -163,6 +297,9 @@ function prepareCanvas() {
 
     //c = document.getElementById('canvas');
     canvas.addEventListener('click', function (e) {
+        if (curTool == "noneTool") {
+            console.log("noneTool in canvas.addEventListener('click'")
+        }
         if (curTool == 'textEditor') {
             if (!textarea) {
                 //console.log('closer!!!');
@@ -184,11 +321,12 @@ function prepareCanvas() {
             //textarea.value = "x: " + x + " y: " + y;
             //var mouseX = e.pageX - this.offsetLeft;
             //var mouseY = e.pageY - this.offsetTop;
-            textarea.value = "x: " + e.clientX + " y: " + e.clientY;
+            else {
+                textarea.value = textarea.value;
 
-            textarea.style.top = e.clientY + 'px';
-            textarea.style.left = e.clientX + 'px';
-
+                textarea.style.top = e.clientY + 'px';
+                textarea.style.left = e.clientX + 'px';
+            }
         }
         if (curTool == "selectTool") {
 
@@ -201,9 +339,15 @@ function prepareCanvas() {
             console.log(index);
             if (index >= 0) {
                 $('#editSelected').prop('disabled', false);
+                if (localArray[index].type == "app.draw") {
+                    edit = true;
+                    tempObj = {};
+                    tempObj = localArray[index];
+                }
             }
             else {
                 index = 0;
+                edit = false;
                 $('#editSelected').prop('disabled', true);
             }
 
@@ -217,6 +361,7 @@ function prepareCanvas() {
     });
 
     $('#saveText').click(function () {
+        curTool = "noneTool";
         console.log("clicked saveText!")
         if (textarea) {
             textColor = curColor;
@@ -260,6 +405,7 @@ function prepareCanvas() {
             textObj.width = metrics.width;
             textObj.height = parseInt(textSize, 10);
             jsonArray.push(textObj);
+            localArray.push(textObj);
 
 
             //////////////
@@ -354,6 +500,7 @@ function prepareCanvas() {
 
         var newImg = new Image();
         newImg.src = $(".resize-image").attr('src');
+        imgObj.imgSrc = newImg.src;
         var originalWidth = newImg.width;
         var originalHeight = newImg.height;
         imgObj.originalWidth = originalWidth;
@@ -679,10 +826,11 @@ $(document).ready(function () {
         curTool = "selectTool";
 
     });
-    $("#editSelected").click(function () {
+    $("#editSelected").click(function (e) {
         edit = true;
         //if (index >= 0) {
-        if (localArray[index].type == "app.img") {
+        var findObj = localArray[index];
+        if (findObj.type == "app.img") {
             //rebuild img tag
             curTool = "img";
 
@@ -690,16 +838,15 @@ $(document).ready(function () {
             imgTag.setAttribute('class', "resize-image");
             imgTag.setAttribute('alt', "image for resizing");
             imgTag.style.zIndex = 100;
-            imgTag.src = localArray[index].imgSrc;
+            imgTag.src = findObj.imgSrc;
 
 
             imgObj = {};
             imgObj.type = "app.img";
             imgObj.imgSrc = img.src;
             /////////
-            var needToFix = 0;
-            var x = localArray[index].x + needToFix;
-            var y = localArray[index].y + needToFix;
+            var x = findObj.x;
+            var y = findObj.y;
             document.body.appendChild(imgTag);
 
             $(".resize-image").one("load", function () {
@@ -712,6 +859,36 @@ $(document).ready(function () {
 
             ///
         }
+        if (findObj.type == "app.text") {
+            curTool = "textEditor";
+            if (!textarea) {
+                //console.log('closer!!!');
+                textarea = document.createElement('textarea');
+                textarea.className = 'info';
+                textarea.style.zIndex = 100;
+                textarea.style.width = "100px";
+                textarea.style.height = "100px";
+                textarea.style.position = "absolute";
+                textarea.style.backgroundColor = "transparent";
+                textarea.value = findObj.textValue;
+                textarea.style.left = findObj.x + 'px';
+                textarea.style.top = findObj.y + 'px';
+
+                document.body.appendChild(textarea);
+            }
+            //var x = e.clientX - canvas.offsetLeft,
+            //    y = e.clientY - canvas.offsetTop;
+            //textarea.value = "x: " + x + " y: " + y;
+            //var mouseX = e.pageX - this.offsetLeft;
+            //var mouseY = e.pageY - this.offsetTop;
+            else {
+                textarea.value = textarea.value;
+
+                textarea.style.top = e.clientY + 'px';
+                textarea.style.left = e.clientX + 'px';
+            }
+        }
+
         tempObj = {};
         tempObj = localArray[index];
         localArray.splice(index, 1);
@@ -770,6 +947,7 @@ function initDraw(jsonA) {
             context.font = textInJson.font;
             //console.log("textareafont: " + textareaFont[i]);
             //console.log("context.font: " + context.font);
+            context.textBaseline = "top";
             context.fillText(textInJson.textValue, textInJson.x, textInJson.y);
 
         }
@@ -778,6 +956,39 @@ function initDraw(jsonA) {
             //var imgString = buildImgTag(imgInJson.imgSrc);
             //imgString = imgString.replaceAll("^\"|\"$", "");
             context.drawImage(buildImgTag(imgInJson.imgSrc), imgInJson.x, imgInJson.y);
+        }
+        if (jsonA[i].type == "app.draw") {
+            if (jsonA[i].mouseEvent == "mouseDown") {
+                var initI = i;
+                for (i; i < jsonA.length; i++) {
+                    context.save();
+                    context.lineJoin = 'round';
+                    context.lineCap = 'round';
+                    context.strokeStyle = jsonA[i].color;
+                    // ctx.globalCompositeOperation = 'source-over';//compositeOperation;
+                    context.globalCompositeOperation = jsonA[i].compositeOperation;
+                    context.lineWidth = jsonA[i].size;
+                    context.beginPath();
+
+                    //ctx.moveTo(start.x, start.y);
+                    context.moveTo(jsonA[i].start.x, jsonA[i].start.y);
+                    // ctx.lineTo(end.x, end.y);
+                    context.lineTo(jsonA[i].end.x, jsonA[i].end.y);
+
+                    //ctx.moveTo(0, 0);
+                    //ctx.lineTo(500, 500);
+
+                    context.closePath();
+                    context.stroke();
+                    context.restore();
+                    if (jsonA[i].mouseEvent == "mouseUp") {
+                        break;
+                    }
+                }
+            }
+            else {
+                console.log("line segements are not sequential");
+            }
         }
     }
     context.restore();
@@ -893,7 +1104,7 @@ function buildImgTag(imgTagSrc) {
 
 function findElement(x, y) {
     var i = 0;
-    for (i = localArray.length - 1; i >= 0; i--) {
+    for (i = 0; i < localArray.length; i++) {
         var jObject = localArray[i];
         //var needToFix = 0;
         //if (testInit == true) {
@@ -909,9 +1120,27 @@ function findElement(x, y) {
         }
         if (jObject.type == "app.text") {
             console.log("in if app.text")
-            if (x >= jObject.x && x <= jObject.x + jObject.width && y >= jObject.y - jObject.height && y <= jObject.y) {
+            if (x >= jObject.x && x <= jObject.x + jObject.width && y >= jObject.y && y <= jObject.y + jObject.height) {
                 console.log("find text element!!")
                 return i;
+            }
+
+        }
+        if (jObject.type == "app.draw") {
+            if (jObject.mouseEvent == "mouseDown") {
+                context.lineWidth = jObject.size;
+                var initI = i;
+                for (i; i < localArray.length; i++) {
+                    context.beginPath();            // new segment
+                    context.moveTo(localArray[i].start.x, localArray[i].start.y);     // start is current point
+                    context.lineTo(localArray[i].end.x, localArray[i].end.y); // end point is next
+                    if (context.isPointInStroke(x, y)) {
+                        return initI;
+                    }
+                    if (localArray[i].mouseEvent == "mouseUp") {
+                        break;
+                    }
+                }
             }
 
         }
@@ -928,6 +1157,10 @@ $('html').keyup(function (e) {
         if (edit) {
             if (tempObj.type == "app.img") {
                 removeImgElement();
+            }
+            if (localArray[index].type == "app.draw") {
+                localArray.splice(index, 1);
+                initDraw(localArray);
             }
         }
     }
